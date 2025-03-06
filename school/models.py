@@ -7,13 +7,14 @@ class Banner(models.Model):
     image = models.ImageField(upload_to='banners/')
 
     def __str__(self):
-        return self.id
+        return f"Banner: {self.image.name}" if self.image else "Banner: No Image"
+
 
 
 class AboutUs(models.Model):
     title = models.CharField(max_length=225)
     content =RichTextField()
-    image = models.ImageField(upload_to='about_us/')
+    image = models.ImageField(upload_to='about_us/', blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -26,9 +27,9 @@ class BlogPost(models.Model):
     ]
 
     title = models.CharField(max_length=225)
-    image = models.ImageField(upload_to='blog_images/')
+    image = models.ImageField(upload_to='blog_images/', blank=True, null=True)
     description = RichTextField(null=True)
-    author = models.CharField(max_length=50)
+    author = models.CharField(max_length=50, blank=True, null=True)
     publish_date = models.DateField(auto_now=False, auto_now_add=False, null=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
     content =RichTextField()

@@ -12,9 +12,15 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 from dotenv import load_dotenv
-import dj_database_url
+
       
 import os
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 
 load_dotenv() 
@@ -45,7 +51,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'school',
-    'mail',
     'rest_framework',
     'django_filters',
     'ckeditor',
@@ -103,7 +108,7 @@ DATABASES = {
     }
 }
 
-DATABASES["defult"] = dj_database_url.parse("postgresql://school_django_render_user:jx7RTSS8zdLLHSoGBBjzapyT82R4zzMN@dpg-cv3vnjlds78s73e1rd40-a.oregon-postgres.render.com/school_django_render")
+
 
 
 # Password validation
@@ -164,5 +169,3 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'kusumshrestha367@gmail.com'  # Replace with your sender email
 EMAIL_HOST_PASSWORD = 'dfcyjywgwtexzsoo'  # Use an app password for Gmail
-
-
