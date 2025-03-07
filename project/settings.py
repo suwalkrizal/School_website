@@ -51,9 +51,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'school',
+    
     'rest_framework',
     'django_filters',
+    
     'ckeditor',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -136,6 +139,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 
