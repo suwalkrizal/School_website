@@ -1,18 +1,9 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 from .views import *
 
-
-# Create Router
-router = DefaultRouter()
-router.register(r'banner', BannerViewSet, basename='banner')
-router.register(r'about', AboutUsViewSet, basename='about')
-router.register(r'blog', BlogPostViewSet, basename='blog')
-router.register(r'contact', ContactUsViewSet, basename='contact')
-
-
-# Define URLs
 urlpatterns = [
-    path('api/', include(router.urls)),  # Include router-generated URLs
-    
+    path('banner/', BannerListView.as_view(), name='banner'),
+    path('about/', AboutUsListView.as_view(), name='about'),
+    path('blog/', BlogPostListView.as_view(), name='blog'),
+    path('contact/', ContactUsView.as_view(), name='contact'),
 ]

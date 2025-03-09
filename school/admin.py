@@ -20,8 +20,8 @@ class AboutUsAdmin(admin.ModelAdmin):
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'image', 'description','author', 'publish_date', 'status', 'content')
-    search_fields = ('title', 'author__email')
-    list_filter = ('status', 'author')
+    search_fields = ('author',)
+    list_filter = ( 'author',)
 
 # Register Contact Model
 @admin.register(ContactUs)

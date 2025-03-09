@@ -1,42 +1,46 @@
 from django.shortcuts import render
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
-# Create your views here.
-from rest_framework import routers, filters, viewsets, status
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
+from rest_framework.pagination import PageNumberPagination
+
+from django.core.mail import send_mail
+from django.conf import settings
+import threading
+
 from .models import *
 from .serializers import *
 
-from rest_framework.pagination import PageNumberPagination
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter
 
-import threading
-from django.core.mail import send_mail
-from django.conf import settings
-# from django.http import HttpResponse
-from rest_framework.response import Response
+class BannerListView(APIView):
+    def get(self, request):
+        queryset = Banner.objects.all()
+        paginator = PageNumberPagination()
+        paginated_queryset = paginator.paginate_queryset(queryset, request)
+        serializer = BannerSerializer(paginated_queryset, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
 
-class BannerViewSet(viewsets.ModelViewSet):
-    queryset = Banner.objects.all()
-    serializer_class = BannerSerializer
-    filter_backends = (SearchFilter,DjangoFilterBackend)
-    pagination_class=PageNumberPagination
-    search_fields = ('id',)
+class AboutUsListView(APIView):
+    def get(self, request):
+        queryset = AboutUs.objects.all()
+        paginator = PageNumberPagination()
+        paginated_queryset = paginator.paginate_queryset(queryset, request)
+        serializer = AboutUsSerializer(paginated_queryset, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
-class AboutUsViewSet(viewsets.ModelViewSet):
-    queryset = AboutUs.objects.all()
-    serializer_class = AboutUsSerializer
-    filter_backends = (SearchFilter,DjangoFilterBackend)
-    pagination_class=PageNumberPagination
-    search_fields = ('title',)
 
-# Blog Post ViewSet
-class BlogPostViewSet(viewsets.ModelViewSet):
-    queryset = BlogPost.objects.all()
-    serializer_class = BlogPostSerializer
-    filter_backends = (SearchFilter,DjangoFilterBackend)
-    pagination_class=PageNumberPagination
-    search_fields = ('title', 'author__email',)
+class BlogPostListView(APIView):
+    def get(self, request):
+        queryset = BlogPost.objects.all()
+        paginator = PageNumberPagination()
+        paginated_queryset = paginator.paginate_queryset(queryset, request)
+        serializer = BlogPostSerializer(paginated_queryset, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
 
 # Function to send email in the background
 def send_email_background(subject, message, recipient_email):
@@ -47,17 +51,18 @@ def send_email_background(subject, message, recipient_email):
         [recipient_email],
         fail_silently=False,
     )
-    
-# Contact ViewSet
-class ContactUsViewSet(viewsets.ModelViewSet):
-    queryset = ContactUs.objects.all()
-    serializer_class = ContactUsSerializer
-    filter_backends = (SearchFilter,DjangoFilterBackend)
-    pagination_class=PageNumberPagination
-    search_fields = ('name', 'email',)
-    
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+
+
+class ContactUsView(APIView):
+    def get(self, request):
+        queryset = ContactUs.objects.all()
+        paginator = PageNumberPagination()
+        paginated_queryset = paginator.paginate_queryset(queryset, request)
+        serializer = ContactUsSerializer(paginated_queryset, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
+    def post(self, request):
+        serializer = ContactUsSerializer(data=request.data)
         if serializer.is_valid():
             contact = serializer.save()
 
@@ -71,7 +76,3 @@ class ContactUsViewSet(viewsets.ModelViewSet):
 
             return Response({"message": "Message sent successfully!"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
