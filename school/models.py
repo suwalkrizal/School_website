@@ -1,13 +1,13 @@
 from django.db import models
 from ckeditor.fields import RichTextField 
-
+from django.utils import timezone
 # Create your models here.
 
 class Banner(models.Model):
     image = models.ImageField(upload_to='banners/')
 
     def __str__(self):
-        return f"Banner: {self.image.name}" if self.image else "Banner: No Image"
+        return f"Banner: {self.image.name}" if self.image else "No Image Available"
 
 
 
@@ -26,11 +26,11 @@ class BlogPost(models.Model):
         ('published', 'Published'),
     ]
 
-    title = models.CharField(max_length=225)
+    title = models.CharField(max_length=225, unique=True)
     image = models.ImageField(upload_to='blog_images/', blank=True, null=True)
-    description = RichTextField(null=True)
+    description = RichTextField(null=True, blank=True)
     author = models.CharField(max_length=50, blank=True, null=True)
-    publish_date = models.DateField(auto_now=False, auto_now_add=False, null=True)
+    publish_date = models.DateField(default=timezone.now)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
     content =RichTextField()
 
@@ -46,4 +46,4 @@ class ContactUs(models.Model):
     message = RichTextField()
 
     def __str__(self):
-        return self.name
+        return f"{self.name} - {self.email}"
